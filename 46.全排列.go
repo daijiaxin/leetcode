@@ -13,10 +13,10 @@ import (
 // @lc code=start
 func permute(nums []int) [][]int {
 	var res [][]int
-	return gen(nums, []int{}, res)
+	return gpermute(nums, []int{}, res)
 }
 
-func gen(nums []int, tmp []int, res [][]int) [][]int {
+func gpermute(nums []int, tmp []int, res [][]int) [][]int {
 	for i, num := range nums {
 		if num == math.MaxInt {
 			continue
@@ -29,7 +29,7 @@ func gen(nums []int, tmp []int, res [][]int) [][]int {
 			return res
 		}
 		nums[i] = math.MaxInt
-		res = gen(nums, tmp, res)
+		res = gpermute(nums, tmp, res)
 		tmp = tmp[:len(tmp)-1]
 		nums[i] = num
 	}
