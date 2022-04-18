@@ -16,11 +16,10 @@ func maxSubArray(nums []int) int {
 			dp[i] = num
 		} else {
 			a := dp[i-1] + num
-			n := num
-			if a >= n {
+			if a >= num {
 				dp[i] = a
 			} else {
-				dp[i] = n
+				dp[i] = num
 			}
 		}
 	}
