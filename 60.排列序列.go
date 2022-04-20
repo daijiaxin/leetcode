@@ -16,42 +16,24 @@ var tar []string
 var count int
 
 func getPermutation(n int, k int) string {
-	var res [][]string
+	var res []string
 	var nums []string
+	var xx []int
 	cc := 1
 	for i := 1; i <= n; i++ {
 		nums = append(nums, fmt.Sprintf("%d", i))
+		xx = append(xx, cc)
 		cc *= i
 	}
-	start := (k - 1) / (cc / n)
-	if n > 3 {
-		getPremut(nums, start, &res)
-		return strings.Join(res[(k-1)%(cc/n)], "")
-	} else {
-		getPremut(nums, 0, &res)
-		return strings.Join(res[k-1], "")
+	k--
+	for len(nums) > 0 {
+		index := len(nums) - 1
+		num := k / xx[index]
+		k = k % xx[index]
+		res = append(res, nums[num])
+		nums = append(nums[:num], nums[num+1:]...)
 	}
-
-}
-
-func getPremut(nums []string, start int, res *[][]string) {
-	if len(nums) == 0 {
-		tmp := []string{}
-		tmp = append(tmp, tar...)
-		*res = append(*res, tmp)
-		return
-	}
-	for i := start; i < len(nums); i++ {
-		if i > 0 && nums[i] == nums[i-1] {
-			continue
-		}
-		tmp := []string{}
-		tmp = append(tmp, nums[:i]...)
-		tmp = append(tmp, nums[i+1:]...)
-		tar = append(tar, nums[i])
-		getPremut(tmp, 0, res)
-		tar = tar[:len(tar)-1]
-	}
+	return strings.Join(res, "")
 }
 
 // @lc code=end
