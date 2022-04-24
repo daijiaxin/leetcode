@@ -1,5 +1,7 @@
 package leetcode
 
+import "math"
+
 /*
  * @lc app=leetcode.cn id=98 lang=golang
  *
@@ -22,24 +24,26 @@ type TreeNode struct {
  * }
  */
 func isValidBST(root *TreeNode) bool {
+	i := math.MinInt
+	return getBst(root, &i)
+}
+
+func getBst(root *TreeNode, last *int) bool {
 	if root == nil {
 		return true
 	}
-	stack := []*TreeNode{root}
-	var top *TreeNode
-	for len(stack) > 0 {
-		r := stack[len(stack)-1]
-		if top != nil && (r.Left.Val >= top.Val || r.Right.Val >= top.Val) {
-			return false
-		}
-		if r.Left.Val >= r.Val || r.Right.Val <= r.Val {
-			return false
-		}
-		top = r
-
-		stack = append(stack, r.Left)
+	if !getBst(root.Left, last) {
+		return false
 	}
-	return false
+	if root.Val <= *last {
+		return false
+	} else {
+		*last = root.Val
+	}
+	if !getBst(root.Right, last) {
+		return false
+	}
+	return true
 }
 
 // @lc code=end

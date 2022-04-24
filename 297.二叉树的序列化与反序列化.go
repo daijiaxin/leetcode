@@ -28,8 +28,7 @@ type TreeNode struct {
  */
 
 type Codec struct {
-	a []string
-	b []string
+	s []string
 }
 
 func Constructor() Codec {
@@ -39,42 +38,35 @@ func Constructor() Codec {
 // Serializes a tree to a single string.
 func (this *Codec) serialize(root *TreeNode) string {
 	if root == nil {
-		return ""
+		this.s = append(this.s, "#")
+		return "#"
 	}
-	this.a = append(this.a, strconv.Itoa(root.Val))
+	this.s = append(this.s, strconv.Itoa(root.Val))
 	this.serialize(root.Left)
-	this.b = append(this.b, strconv.Itoa(root.Val))
 	this.serialize(root.Right)
-	s := strings.Join(this.a, ",") + "|" + strings.Join(this.b, ",")
-	return s
+	return strings.Join(this.s, ",")
 }
 
 // Deserializes your encoded data to tree.
 func (this *Codec) deserialize(data string) *TreeNode {
-	if data == "" {
-		return nil
-	}
-	d := strings.Split(data, "|")
-	this.a = strings.Split(d[0], ",")
-	this.b = strings.Split(d[1], ",")
-	return buildTree(this.a, this.b)
+	s := strings.Split(data, ",")
+	return buildTree(&s)
 }
 
-func buildTree(preorder []string, inorder []string) *TreeNode {
-	if len(preorder) == 0 || len(inorder) == 0 {
+func buildTree(preorder *[]string) *TreeNode {
+	if len(*preorder) == 0 {
 		return nil
 	}
-	index := 0
-	for i, in := range inorder {
-		if in == preorder[index] {
-			index = i
-			break
-		}
-	}
 	root := &TreeNode{}
-	root.Val, _ = strconv.Atoi(preorder[0])
-	root.Left = buildTree(preorder[1:], inorder[:index])
-	root.Right = buildTree(preorder[index+1:], inorder[index+1:])
+	if (*preorder)[0] != "#" {
+		root.Val, _ = strconv.Atoi((*preorder)[0])
+		*preorder = (*preorder)[1:]
+	} else {
+		*preorder = (*preorder)[1:]
+		return nil
+	}
+	root.Left = buildTree(preorder)
+	root.Right = buildTree(preorder)
 	return root
 }
 
